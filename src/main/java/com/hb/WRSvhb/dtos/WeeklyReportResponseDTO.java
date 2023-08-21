@@ -2,6 +2,7 @@ package com.hb.WRSvhb.dtos;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.hb.WRSvhb.enums.ReportStatus;
 
@@ -15,11 +16,7 @@ public class WeeklyReportResponseDTO {
     private ProjectDTO project;
     private Long reportId;
     private LocalDateTime reportCreatedDateTime;
-    private LocalDate plannedCompletionDate;
-    private LocalDate actualCompletionDate;
-    private String deliverables;
-    private int noOfHours;
-    private String activity;
+    private List<WeeklyReportDetails> reportDetailsList;
     private String remark;
     private String pointsForDiscussion;
     private String expectedActivitiesOfUpcomingWeek;

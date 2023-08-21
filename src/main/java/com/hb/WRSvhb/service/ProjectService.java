@@ -168,11 +168,7 @@ public class ProjectService {
         reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
         reportResponseDTO.setReportId(report.getReportId());
         reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
-        reportResponseDTO.setPlannedCompletionDate(report.getPlannedCompletionDate());
-        reportResponseDTO.setActualCompletionDate(report.getActualCompletionDate());
-        reportResponseDTO.setDeliverables(report.getDeliverables());
-        reportResponseDTO.setNoOfHours(report.getNoOfHours());
-        reportResponseDTO.setActivity(report.getActivity());
+        reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
         reportResponseDTO.setRemark(report.getRemark());
         reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
         reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());

@@ -1,5 +1,6 @@
 package com.hb.WRSvhb.model;
 
+import com.hb.WRSvhb.dtos.WeeklyReportDetails;
 import com.hb.WRSvhb.enums.ReportStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,11 +32,9 @@ public class WeeklyReport {
     private Long reportId;
 
     private LocalDateTime reportCreatedDateTime;
-    private LocalDate plannedCompletionDate;
-    private LocalDate actualCompletionDate;
-    private String deliverables;
-    private int noOfHours;
-    private String activity;
+
+    @ElementCollection
+    private List<WeeklyReportDetails> reportDetailsList;
 
 
     private String remark;

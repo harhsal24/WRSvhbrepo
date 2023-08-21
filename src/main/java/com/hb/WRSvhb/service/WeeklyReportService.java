@@ -90,14 +90,14 @@ public class WeeklyReportService {
 
     public Optional<WeeklyReportResponseDTO> updateReport(Long reportId, WeeklyReportResponseDTO updatedReportDTO) {
         Optional<WeeklyReport> existingReport = weeklyReportRepository.findById(reportId);
+
         if (existingReport.isPresent()) {
             WeeklyReport reportToUpdate = existingReport.get();
 
-            reportToUpdate.setPlannedCompletionDate(updatedReportDTO.getPlannedCompletionDate());
-            reportToUpdate.setActualCompletionDate(updatedReportDTO.getActualCompletionDate());
-            reportToUpdate.setDeliverables(updatedReportDTO.getDeliverables());
-            reportToUpdate.setNoOfHours(updatedReportDTO.getNoOfHours());
-            reportToUpdate.setActivity(updatedReportDTO.getActivity());
+            if (updatedReportDTO.getReportDetailsList() != null) {
+                reportToUpdate.setReportDetailsList(updatedReportDTO.getReportDetailsList());
+            }
+
             reportToUpdate.setRemark(updatedReportDTO.getRemark());
             reportToUpdate.setPointsForDiscussion(updatedReportDTO.getPointsForDiscussion());
             reportToUpdate.setExpectedActivitiesOfUpcomingWeek(updatedReportDTO.getExpectedActivitiesOfUpcomingWeek());
@@ -161,11 +161,7 @@ public class WeeklyReportService {
             reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
             reportResponseDTO.setReportId(report.getReportId());
             reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
-            reportResponseDTO.setPlannedCompletionDate(report.getPlannedCompletionDate());
-            reportResponseDTO.setActualCompletionDate(report.getActualCompletionDate());
-            reportResponseDTO.setDeliverables(report.getDeliverables());
-            reportResponseDTO.setNoOfHours(report.getNoOfHours());
-            reportResponseDTO.setActivity(report.getActivity());
+            reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
             reportResponseDTO.setRemark(report.getRemark());
             reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
             reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
@@ -179,11 +175,7 @@ public class WeeklyReportService {
             report.setProject(convertToProjectEntity(reportDTO.getProject()));
             report.setReportId(reportDTO.getReportId());
             report.setReportCreatedDateTime(reportDTO.getReportCreatedDateTime());
-            report.setPlannedCompletionDate(reportDTO.getPlannedCompletionDate());
-            report.setActualCompletionDate(reportDTO.getActualCompletionDate());
-            report.setDeliverables(reportDTO.getDeliverables());
-            report.setNoOfHours(reportDTO.getNoOfHours());
-            report.setActivity(reportDTO.getActivity());
+            report.setReportDetailsList(reportDTO.getReportDetailsList());
             report.setRemark(reportDTO.getRemark());
             report.setPointsForDiscussion(reportDTO.getPointsForDiscussion());
             report.setExpectedActivitiesOfUpcomingWeek(reportDTO.getExpectedActivitiesOfUpcomingWeek());
