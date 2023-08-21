@@ -36,11 +36,11 @@ public class WeeklyReport {
     private int noOfHours;
     private String activity;
 
-    @Column(nullable = true)
+
     private String remark;
-    @Column(nullable = true)
+
     private String pointsForDiscussion;
-    @Column(nullable = true)
+
     private String expectedActivitiesOfUpcomingWeek;
 
     @Enumerated(EnumType.STRING)

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import com.hb.WRSvhb.enums.ReportStatus;
 
-import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 

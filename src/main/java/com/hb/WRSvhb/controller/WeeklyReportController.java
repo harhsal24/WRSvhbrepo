@@ -4,6 +4,9 @@ import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
 import com.hb.WRSvhb.model.WeeklyReport;
 import com.hb.WRSvhb.service.WeeklyReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,4 +95,69 @@ public class WeeklyReportController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //paginated version
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getAllReportsWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getAllReportsWithPagination(pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/employee/{employeeId}/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getReportsByEmployeeIdWithPagination(
+            @PathVariable Long employeeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getReportsByEmployeeIdWithPagination(employeeId, pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/teamleader/{teamLeaderId}/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getReportsByTeamLeaderIdWithPagination(
+            @PathVariable Long teamLeaderId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getReportsByTeamLeaderIdWithPagination(teamLeaderId, pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/employee/{employeeId}/project/{projectId}/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getReportsByEmployeeAndProjectWithPagination(
+            @PathVariable Long employeeId,
+            @PathVariable Long projectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getReportsByEmployeeAndProjectWithPagination(employeeId, projectId, pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/teamleader/{teamLeaderId}/project/{projectId}/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getReportsByTeamLeaderAndProjectWithPagination(
+            @PathVariable Long teamLeaderId,
+            @PathVariable Long projectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getReportsByTeamLeaderAndProjectWithPagination(teamLeaderId, projectId, pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+    @GetMapping("/project/{projectId}/pagination")
+    public ResponseEntity<Page<WeeklyReportResponseDTO>> getReportsByProjectIdWithPagination(
+            @PathVariable Long projectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WeeklyReportResponseDTO> reports = weeklyReportService.getReportsByProjectIdWithPagination(projectId, pageable);
+        return ResponseEntity.ok(reports);
+    }
+
+
 }

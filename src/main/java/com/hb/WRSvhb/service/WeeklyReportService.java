@@ -9,6 +9,8 @@ import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.ProjectDTO;
 import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +21,11 @@ public class WeeklyReportService {
 
     private final WeeklyReportRepository weeklyReportRepository;
     private final EmployeeRepository employeeRepository;
+
     @Autowired
-    public WeeklyReportService(WeeklyReportRepository weeklyReportRepository,EmployeeRepository employeeRepository) {
+    public WeeklyReportService(WeeklyReportRepository weeklyReportRepository, EmployeeRepository employeeRepository) {
         this.weeklyReportRepository = weeklyReportRepository;
-        this.employeeRepository=employeeRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public List<WeeklyReportResponseDTO> getAllReports() {
@@ -116,83 +119,118 @@ public class WeeklyReportService {
         return false;
     }
 
+//    pagination logic start
+
+    public Page<WeeklyReportResponseDTO> getAllReportsWithPagination(Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findAll(pageable);
+        return reports.map(this::convertToResponseDTO);
+    }
+
+    public Page<WeeklyReportResponseDTO> getReportsByProjectIdWithPagination(Long projectId, Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findByProjectProjectIdOrderByReportCreatedDateTimeDesc(projectId, pageable);
+        return reports.map(this::convertToResponseDTO);
+
+    }
+
+    public Page<WeeklyReportResponseDTO> getReportsByEmployeeIdWithPagination(Long employeeId, Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findByEmployeeEmpIdOrderByReportCreatedDateTimeDesc(employeeId, pageable);
+        return reports.map(this::convertToResponseDTO);
+    }
+
+    public Page<WeeklyReportResponseDTO> getReportsByTeamLeaderIdWithPagination(Long teamLeaderId, Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findByProjectTeamLeaderEmpIdOrderByReportCreatedDateTimeDesc(teamLeaderId, pageable);
+        return reports.map(this::convertToResponseDTO);
+    }
+
+    public Page<WeeklyReportResponseDTO> getReportsByEmployeeAndProjectWithPagination(Long employeeId, Long projectId, Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findByEmployeeEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(employeeId, projectId, pageable);
+        return reports.map(this::convertToResponseDTO);
+    }
+
+    public Page<WeeklyReportResponseDTO> getReportsByTeamLeaderAndProjectWithPagination(Long teamLeaderId, Long projectId, Pageable pageable) {
+        Page<WeeklyReport> reports = weeklyReportRepository.findByProjectTeamLeaderEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(teamLeaderId, projectId, pageable);
+        return reports.map(this::convertToResponseDTO);
+    }
+
+//    paginated methods end here
+
     // Helper methods to convert between entities and DTOs
-    private WeeklyReportResponseDTO convertToResponseDTO(WeeklyReport report) {
-        WeeklyReportResponseDTO reportResponseDTO = new WeeklyReportResponseDTO();
-        reportResponseDTO.setEmployee(convertToEmployeeDTO(report.getEmployee()));
-        reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
-        reportResponseDTO.setReportId(report.getReportId());
-        reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
-        reportResponseDTO.setPlannedCompletionDate(report.getPlannedCompletionDate());
-        reportResponseDTO.setActualCompletionDate(report.getActualCompletionDate());
-        reportResponseDTO.setDeliverables(report.getDeliverables());
-        reportResponseDTO.setNoOfHours(report.getNoOfHours());
-        reportResponseDTO.setActivity(report.getActivity());
-        reportResponseDTO.setRemark(report.getRemark());
-        reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
-        reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
-        reportResponseDTO.setReportStatus(report.getReportStatus());
-        return reportResponseDTO;
+        private WeeklyReportResponseDTO convertToResponseDTO (WeeklyReport report){
+            WeeklyReportResponseDTO reportResponseDTO = new WeeklyReportResponseDTO();
+            reportResponseDTO.setEmployee(convertToEmployeeDTO(report.getEmployee()));
+            reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
+            reportResponseDTO.setReportId(report.getReportId());
+            reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
+            reportResponseDTO.setPlannedCompletionDate(report.getPlannedCompletionDate());
+            reportResponseDTO.setActualCompletionDate(report.getActualCompletionDate());
+            reportResponseDTO.setDeliverables(report.getDeliverables());
+            reportResponseDTO.setNoOfHours(report.getNoOfHours());
+            reportResponseDTO.setActivity(report.getActivity());
+            reportResponseDTO.setRemark(report.getRemark());
+            reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
+            reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
+            reportResponseDTO.setReportStatus(report.getReportStatus());
+            return reportResponseDTO;
+        }
+
+        private WeeklyReport convertToEntity (WeeklyReportResponseDTO reportDTO){
+            WeeklyReport report = new WeeklyReport();
+            report.setEmployee(convertToEmployeeEntity(reportDTO.getEmployee()));
+            report.setProject(convertToProjectEntity(reportDTO.getProject()));
+            report.setReportId(reportDTO.getReportId());
+            report.setReportCreatedDateTime(reportDTO.getReportCreatedDateTime());
+            report.setPlannedCompletionDate(reportDTO.getPlannedCompletionDate());
+            report.setActualCompletionDate(reportDTO.getActualCompletionDate());
+            report.setDeliverables(reportDTO.getDeliverables());
+            report.setNoOfHours(reportDTO.getNoOfHours());
+            report.setActivity(reportDTO.getActivity());
+            report.setRemark(reportDTO.getRemark());
+            report.setPointsForDiscussion(reportDTO.getPointsForDiscussion());
+            report.setExpectedActivitiesOfUpcomingWeek(reportDTO.getExpectedActivitiesOfUpcomingWeek());
+            report.setReportStatus(reportDTO.getReportStatus());
+            return report;
+        }
+
+        private EmployeeDTO convertToEmployeeDTO (Employee employee){
+            EmployeeDTO employeeDTO = new EmployeeDTO();
+            employeeDTO.setEmployeeId(employee.getEmpId());
+            employeeDTO.setEmployeeName(employee.getName());
+            // Set other fields
+            return employeeDTO;
+        }
+
+        private ProjectDTO convertToProjectDTO (Project project){
+            ProjectDTO projectDTO = new ProjectDTO();
+            projectDTO.setProjectId(project.getProjectId());
+            projectDTO.setProjectName(project.getProjectName());
+
+            EmployeeDTO teamLeaderDTO = new EmployeeDTO();
+            teamLeaderDTO.setEmployeeId(project.getTeamLeader().getEmpId());
+            teamLeaderDTO.setEmployeeName(project.getTeamLeader().getName());
+
+            projectDTO.setTeamLeader(teamLeaderDTO);
+            // Set other fields of the teamLeaderDTO if needed
+
+            return projectDTO;
+
+        }
+
+        private Employee convertToEmployeeEntity (EmployeeDTO employeeDTO){
+            Employee employee = new Employee();
+            employee.setEmpId(employeeDTO.getEmployeeId());
+            employee.setName(employeeDTO.getEmployeeName());
+            // Set other fields
+            return employee;
+        }
+        private Project convertToProjectEntity (ProjectDTO projectDTO){
+            Project project = new Project();
+            project.setProjectId(projectDTO.getProjectId());
+            project.setProjectName(projectDTO.getProjectName());
+            if (projectDTO.getTeamLeader() != null) {
+                Employee teamLeaderEntity = convertToEmployeeEntity(projectDTO.getTeamLeader());
+                project.setTeamLeader(teamLeaderEntity);
+            }
+            return project;
+        }
+
     }
-
-    private WeeklyReport convertToEntity(WeeklyReportResponseDTO reportDTO) {
-        WeeklyReport report = new WeeklyReport();
-        report.setEmployee(convertToEmployeeEntity(reportDTO.getEmployee()));
-        report.setProject(convertToProjectEntity(reportDTO.getProject()));
-        report.setReportId(reportDTO.getReportId());
-        report.setReportCreatedDateTime(reportDTO.getReportCreatedDateTime());
-        report.setPlannedCompletionDate(reportDTO.getPlannedCompletionDate());
-        report.setActualCompletionDate(reportDTO.getActualCompletionDate());
-        report.setDeliverables(reportDTO.getDeliverables());
-        report.setNoOfHours(reportDTO.getNoOfHours());
-        report.setActivity(reportDTO.getActivity());
-        report.setRemark(reportDTO.getRemark());
-        report.setPointsForDiscussion(reportDTO.getPointsForDiscussion());
-        report.setExpectedActivitiesOfUpcomingWeek(reportDTO.getExpectedActivitiesOfUpcomingWeek());
-        report.setReportStatus(reportDTO.getReportStatus());
-        return report;
-    }
-
-    private EmployeeDTO convertToEmployeeDTO(Employee employee) {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeId(employee.getEmpId());
-        employeeDTO.setEmployeeName(employee.getName());
-        // Set other fields
-        return employeeDTO;
-    }
-
- private ProjectDTO convertToProjectDTO(Project project) {
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(project.getProjectId());
-        projectDTO.setProjectName(project.getProjectName());
-
-     EmployeeDTO teamLeaderDTO = new EmployeeDTO();
-     teamLeaderDTO.setEmployeeId(project.getTeamLeader().getEmpId());
-     teamLeaderDTO.setEmployeeName(project.getTeamLeader().getName());
-
-     projectDTO.setTeamLeader(teamLeaderDTO);
-     // Set other fields of the teamLeaderDTO if needed
-
-        return projectDTO;
-
-}
-
-private Employee convertToEmployeeEntity(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        employee.setEmpId(employeeDTO.getEmployeeId());
-        employee.setName(employeeDTO.getEmployeeName());
-        // Set other fields
-        return employee;
-}
-private Project convertToProjectEntity(ProjectDTO projectDTO) {
-        Project project = new Project();
-        project.setProjectId(projectDTO.getProjectId());
-        project.setProjectName(projectDTO.getProjectName());
-    if (projectDTO.getTeamLeader() != null) {
-        Employee teamLeaderEntity = convertToEmployeeEntity(projectDTO.getTeamLeader());
-        project.setTeamLeader(teamLeaderEntity);
-    }
-        return project;
-    }
-
-}

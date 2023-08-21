@@ -14,6 +14,8 @@ import com.hb.WRSvhb.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -102,6 +104,31 @@ public class ProjectService {
         return employee.orElseThrow(() -> new EntityNotFoundException("Employee not found with ID: " + employeeId));
     }
 
+
+
+    // paginated version start here
+
+    public Page<ProjectResponseDTO> getAllProjectsPaginated(Pageable pageable) {
+        Page<Project> projectsPage = projectRepository.findAll(pageable);
+        return projectsPage.map(this::convertToResponseDTO);
+    }
+
+    // Paginated version of getProjectsByEmployeeId
+    public Page<ProjectResponseDTO> getProjectsByEmployeeIdPaginated(Long employeeId, Pageable pageable) {
+        Page<Project> projectsPage = projectRepository.findByEmployees_EmpId(employeeId, pageable);
+        return projectsPage.map(this::convertToResponseDTO);
+    }
+
+    // Paginated version of getProjectsByTeamLeaderId
+    public Page<ProjectResponseDTO> getProjectsByTeamLeaderIdPaginated(Long teamLeaderId, Pageable pageable) {
+        Page<Project> projectsPage = projectRepository.findByTeamLeader_EmpId(teamLeaderId, pageable);
+        return projectsPage.map(this::convertToResponseDTO);
+    }
+
+//    paginated version end here
+
+
+    // helper functions start
     private ProjectDTO convertToDTO(Project project) {
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setProjectId(project.getProjectId());

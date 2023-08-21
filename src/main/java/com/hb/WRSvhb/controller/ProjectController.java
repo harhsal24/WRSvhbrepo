@@ -5,10 +5,13 @@ import com.hb.WRSvhb.dtos.ProjectRequestDTO;
 import com.hb.WRSvhb.dtos.ProjectResponseDTO;
 import com.hb.WRSvhb.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,4 +76,38 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // paginated version start
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<ProjectResponseDTO>> getAllProjectsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProjectResponseDTO> projectDTOs = projectService.getAllProjectsPaginated(pageable);
+        return ResponseEntity.ok(projectDTOs);
+    }
+
+    @GetMapping("/employee/{employeeId}/pagination")
+    public ResponseEntity<Page<ProjectResponseDTO>> getProjectsByEmployeeIdPaginated(
+            @PathVariable Long employeeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProjectResponseDTO> projectResponseDTOs = projectService.getProjectsByEmployeeIdPaginated(employeeId, pageable);
+        return ResponseEntity.ok(projectResponseDTOs);
+    }
+
+    @GetMapping("/teamleader/{teamLeaderId}/pagination")
+    public ResponseEntity<Page<ProjectResponseDTO>> getProjectsByTeamLeaderIdPaginated(
+            @PathVariable Long teamLeaderId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProjectResponseDTO> projectResponseDTOs = projectService.getProjectsByTeamLeaderIdPaginated(teamLeaderId, pageable);
+        return ResponseEntity.ok(projectResponseDTOs);
+    }
+
+    // end here
+
 }
