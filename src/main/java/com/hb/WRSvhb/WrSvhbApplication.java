@@ -22,13 +22,19 @@ import com.hb.WRSvhb.model.WeeklyReport;
 import com.hb.WRSvhb.service.EmployeeService;
 import com.hb.WRSvhb.service.ProjectService;
 import com.hb.WRSvhb.service.WeeklyReportService;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
+@ComponentScan(basePackages = "com.hb.WRSvhb")
 public class WrSvhbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WrSvhbApplication.class, args);
 	}
+
+
 
 @Bean
 public CommandLineRunner initData(
