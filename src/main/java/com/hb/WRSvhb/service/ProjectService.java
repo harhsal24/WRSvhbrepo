@@ -4,7 +4,7 @@ import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.ProjectDTO;
 import com.hb.WRSvhb.dtos.ProjectRequestDTO;
 import com.hb.WRSvhb.dtos.ProjectResponseDTO;
-import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
+import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
 import com.hb.WRSvhb.model.Employee;
 import com.hb.WRSvhb.model.Project;
 import com.hb.WRSvhb.model.WeeklyReport;
@@ -144,7 +144,7 @@ public class ProjectService {
                 .map(this::convertToEmployeeDTO)
                 .collect(Collectors.toList()));
         responseDTO.setWeeklyReports(project.getWeeklyReports().stream()
-                .map(this::convertToWeeklyReportResponseDTO)
+                .map(this::convertToWeeklyReportRequestResponseDTO)
                 .collect(Collectors.toList()));
         responseDTO.setProjectId(project.getProjectId());
         responseDTO.setProjectName(project.getProjectName());
@@ -162,8 +162,8 @@ public class ProjectService {
         return employeeDTO;
     }
 
-    private WeeklyReportResponseDTO convertToWeeklyReportResponseDTO(WeeklyReport report) {
-        WeeklyReportResponseDTO reportResponseDTO = new WeeklyReportResponseDTO();
+    private WeeklyReportRequestResponseDTO convertToWeeklyReportRequestResponseDTO(WeeklyReport report) {
+        WeeklyReportRequestResponseDTO reportResponseDTO = new WeeklyReportRequestResponseDTO();
         reportResponseDTO.setEmployee(convertToEmployeeDTO(report.getEmployee()));
         reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
         reportResponseDTO.setReportId(report.getReportId());

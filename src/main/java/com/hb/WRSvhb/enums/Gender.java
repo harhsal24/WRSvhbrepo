@@ -1,8 +1,11 @@
 package com.hb.WRSvhb.enums;
 
+
 public enum Gender {
-    MALE,
+     MALE,
+
     FEMALE,
+
     OTHERS
 
 }

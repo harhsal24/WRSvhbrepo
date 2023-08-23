@@ -11,10 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeResponseDTO {
+
     private EmployeeDTO manager;
     private List<ProjectDTO> ledProjects;
     private List<ProjectDTO> projects;
-    private List<WeeklyReportResponseDTO> weeklyReports;
+    private List<WeeklyReportRequestResponseDTO> weeklyReports;
     private Long empId;
     private String name;
     private Role role;

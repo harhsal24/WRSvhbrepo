@@ -1,5 +1,6 @@
 package com.hb.WRSvhb.service;
 
+import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
 import com.hb.WRSvhb.model.Employee;
 import com.hb.WRSvhb.model.Project;
 import com.hb.WRSvhb.model.WeeklyReport;
@@ -7,7 +8,6 @@ import com.hb.WRSvhb.repository.EmployeeRepository;
 import com.hb.WRSvhb.repository.WeeklyReportRepository;
 import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.ProjectDTO;
-import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +28,7 @@ public class WeeklyReportService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<WeeklyReportResponseDTO> getAllReports() {
+    public List<WeeklyReportRequestResponseDTO> getAllReports() {
         List<WeeklyReport> reports = weeklyReportRepository.findAll();
         return reports.stream()
                 .map(this::convertToResponseDTO)
@@ -36,12 +36,12 @@ public class WeeklyReportService {
     }
 
 
-    public Optional<WeeklyReportResponseDTO> getReportById(Long reportId) {
+    public Optional<WeeklyReportRequestResponseDTO> getReportById(Long reportId) {
         Optional<WeeklyReport> report = weeklyReportRepository.findById(reportId);
         return report.map(this::convertToResponseDTO);
     }
 
-    public List<WeeklyReportResponseDTO> getReportsByEmployeeId(Long employeeId) {
+    public List<WeeklyReportRequestResponseDTO> getReportsByEmployeeId(Long employeeId) {
         List<WeeklyReport> reports = weeklyReportRepository
                 .findByEmployeeEmpIdOrderByReportCreatedDateTimeDesc(employeeId);
         return reports.stream()
@@ -49,7 +49,7 @@ public class WeeklyReportService {
                 .collect(Collectors.toList());
     }
 
-    public List<WeeklyReportResponseDTO> getReportsByTeamLeaderId(Long teamLeaderId) {
+    public List<WeeklyReportRequestResponseDTO> getReportsByTeamLeaderId(Long teamLeaderId) {
         List<WeeklyReport> reports = weeklyReportRepository
                 .findByProjectTeamLeaderEmpIdOrderByReportCreatedDateTimeDesc(teamLeaderId);
         return reports.stream()
@@ -57,7 +57,7 @@ public class WeeklyReportService {
                 .collect(Collectors.toList());
     }
 
-    public List<WeeklyReportResponseDTO> getReportsByEmployeeAndProject(Long employeeId, Long projectId) {
+    public List<WeeklyReportRequestResponseDTO> getReportsByEmployeeAndProject(Long employeeId, Long projectId) {
         List<WeeklyReport> reports = weeklyReportRepository
                 .findByEmployeeEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(employeeId, projectId);
         return reports.stream()
@@ -65,7 +65,7 @@ public class WeeklyReportService {
                 .collect(Collectors.toList());
     }
 
-    public List<WeeklyReportResponseDTO> getReportsByTeamLeaderAndProject(Long teamLeaderId, Long projectId) {
+    public List<WeeklyReportRequestResponseDTO> getReportsByTeamLeaderAndProject(Long teamLeaderId, Long projectId) {
         List<WeeklyReport> reports = weeklyReportRepository
                 .findByProjectTeamLeaderEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(teamLeaderId,
                         projectId);
@@ -74,7 +74,7 @@ public class WeeklyReportService {
                 .collect(Collectors.toList());
     }
 
-    public List<WeeklyReportResponseDTO> getReportsByProjectId(Long projectId) {
+    public List<WeeklyReportRequestResponseDTO> getReportsByProjectId(Long projectId) {
         List<WeeklyReport> reports = weeklyReportRepository
                 .findByProjectProjectIdOrderByReportCreatedDateTimeDesc(projectId);
         return reports.stream()
@@ -82,13 +82,13 @@ public class WeeklyReportService {
                 .collect(Collectors.toList());
     }
 
-    public WeeklyReportResponseDTO createReport(WeeklyReportResponseDTO reportDTO) {
+    public WeeklyReportRequestResponseDTO createReport(WeeklyReportRequestResponseDTO reportDTO) {
         WeeklyReport report = convertToEntity(reportDTO);
         report = weeklyReportRepository.save(report);
         return convertToResponseDTO(report);
     }
 
-    public Optional<WeeklyReportResponseDTO> updateReport(Long reportId, WeeklyReportResponseDTO updatedReportDTO) {
+    public Optional<WeeklyReportRequestResponseDTO> updateReport(Long reportId, WeeklyReportRequestResponseDTO updatedReportDTO) {
         Optional<WeeklyReport> existingReport = weeklyReportRepository.findById(reportId);
 
         if (existingReport.isPresent()) {
@@ -121,33 +121,33 @@ public class WeeklyReportService {
 
 //    pagination logic start
 
-    public Page<WeeklyReportResponseDTO> getAllReportsWithPagination(Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getAllReportsWithPagination(Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findAll(pageable);
         return reports.map(this::convertToResponseDTO);
     }
 
-    public Page<WeeklyReportResponseDTO> getReportsByProjectIdWithPagination(Long projectId, Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getReportsByProjectIdWithPagination(Long projectId, Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findByProjectProjectIdOrderByReportCreatedDateTimeDesc(projectId, pageable);
         return reports.map(this::convertToResponseDTO);
 
     }
 
-    public Page<WeeklyReportResponseDTO> getReportsByEmployeeIdWithPagination(Long employeeId, Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getReportsByEmployeeIdWithPagination(Long employeeId, Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findByEmployeeEmpIdOrderByReportCreatedDateTimeDesc(employeeId, pageable);
         return reports.map(this::convertToResponseDTO);
     }
 
-    public Page<WeeklyReportResponseDTO> getReportsByTeamLeaderIdWithPagination(Long teamLeaderId, Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getReportsByTeamLeaderIdWithPagination(Long teamLeaderId, Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findByProjectTeamLeaderEmpIdOrderByReportCreatedDateTimeDesc(teamLeaderId, pageable);
         return reports.map(this::convertToResponseDTO);
     }
 
-    public Page<WeeklyReportResponseDTO> getReportsByEmployeeAndProjectWithPagination(Long employeeId, Long projectId, Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getReportsByEmployeeAndProjectWithPagination(Long employeeId, Long projectId, Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findByEmployeeEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(employeeId, projectId, pageable);
         return reports.map(this::convertToResponseDTO);
     }
 
-    public Page<WeeklyReportResponseDTO> getReportsByTeamLeaderAndProjectWithPagination(Long teamLeaderId, Long projectId, Pageable pageable) {
+    public Page<WeeklyReportRequestResponseDTO> getReportsByTeamLeaderAndProjectWithPagination(Long teamLeaderId, Long projectId, Pageable pageable) {
         Page<WeeklyReport> reports = weeklyReportRepository.findByProjectTeamLeaderEmpIdAndProjectProjectIdOrderByReportCreatedDateTimeDesc(teamLeaderId, projectId, pageable);
         return reports.map(this::convertToResponseDTO);
     }
@@ -155,8 +155,8 @@ public class WeeklyReportService {
 //    paginated methods end here
 
     // Helper methods to convert between entities and DTOs
-        private WeeklyReportResponseDTO convertToResponseDTO (WeeklyReport report){
-            WeeklyReportResponseDTO reportResponseDTO = new WeeklyReportResponseDTO();
+        private WeeklyReportRequestResponseDTO convertToResponseDTO (WeeklyReport report){
+            WeeklyReportRequestResponseDTO reportResponseDTO = new WeeklyReportRequestResponseDTO();
             reportResponseDTO.setEmployee(convertToEmployeeDTO(report.getEmployee()));
             reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
             reportResponseDTO.setReportId(report.getReportId());
@@ -169,7 +169,7 @@ public class WeeklyReportService {
             return reportResponseDTO;
         }
 
-        private WeeklyReport convertToEntity (WeeklyReportResponseDTO reportDTO){
+        private WeeklyReport convertToEntity (WeeklyReportRequestResponseDTO reportDTO){
             WeeklyReport report = new WeeklyReport();
             report.setEmployee(convertToEmployeeEntity(reportDTO.getEmployee()));
             report.setProject(convertToProjectEntity(reportDTO.getProject()));

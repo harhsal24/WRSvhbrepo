@@ -19,16 +19,25 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long empId;
 
+    @Column(nullable = false)
     private String name;
 
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
@@ -37,8 +46,10 @@ public class Employee {
     @OneToMany(mappedBy = "teamLeader")
     private List<Project> ledProjects = new ArrayList<>();
 
+
     @ManyToMany(mappedBy = "employees")
     private List<Project> projects = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "employee")
     private List<WeeklyReport> weeklyReports = new ArrayList<>();

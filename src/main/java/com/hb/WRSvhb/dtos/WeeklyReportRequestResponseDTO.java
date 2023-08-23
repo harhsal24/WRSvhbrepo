@@ -1,6 +1,5 @@
 package com.hb.WRSvhb.dtos;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,10 +10,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WeeklyReportResponseDTO {
+public class WeeklyReportRequestResponseDTO {
+    private Long reportId;
     private EmployeeDTO employee;
     private ProjectDTO project;
-    private Long reportId;
     private LocalDateTime reportCreatedDateTime;
     private List<WeeklyReportDetails> reportDetailsList;
     private String remark;

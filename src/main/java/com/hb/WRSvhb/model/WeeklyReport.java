@@ -17,25 +17,25 @@ import java.util.List;
 @Entity
 public class WeeklyReport {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reportId;
+
+   
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reportId;
-
     private LocalDateTime reportCreatedDateTime;
 
+    @Column(nullable = false)
     @ElementCollection
     private List<WeeklyReportDetails> reportDetailsList;
-
 
     private String remark;
 
@@ -43,6 +43,7 @@ public class WeeklyReport {
 
     private String expectedActivitiesOfUpcomingWeek;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 

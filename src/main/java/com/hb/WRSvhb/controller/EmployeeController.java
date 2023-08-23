@@ -21,9 +21,21 @@ public class EmployeeController {
 
     private final  EmployeeService employeeService;
 
+
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
+    }
+
+
+    @GetMapping("/allEmployees")
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<EmployeeDTO> allEmployees = employeeService.findAllEmployees()
+                .stream()
+                .map(this::convertToEmployeeDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(allEmployees);
     }
 
     @GetMapping("/{employeeId}")

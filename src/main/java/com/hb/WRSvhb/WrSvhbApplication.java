@@ -1,30 +1,24 @@
 package com.hb.WRSvhb;
 
-import java.time.LocalDate;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.hb.WRSvhb.dtos.EmployeeDTO;
-import com.hb.WRSvhb.dtos.EmployeeResponseDTO;
-import com.hb.WRSvhb.dtos.ProjectDTO;
-import com.hb.WRSvhb.dtos.ProjectResponseDTO;
-import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
 import com.hb.WRSvhb.enums.Gender;
-import com.hb.WRSvhb.enums.ReportStatus;
+
 import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.Employee;
-import com.hb.WRSvhb.model.Project;
-import com.hb.WRSvhb.model.WeeklyReport;
+
 import com.hb.WRSvhb.service.EmployeeService;
 import com.hb.WRSvhb.service.ProjectService;
 import com.hb.WRSvhb.service.WeeklyReportService;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.hb.WRSvhb")
@@ -34,7 +28,8 @@ public class WrSvhbApplication {
 		SpringApplication.run(WrSvhbApplication.class, args);
 	}
 
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 @Bean
 public CommandLineRunner initData(
@@ -56,6 +51,11 @@ public CommandLineRunner initData(
         employee2.setEmail("jane@example.com");
         employee2.setGender(Gender.FEMALE);
         employeeService.createEmployee(employee2);
+
+
+
+
+
 
         // Create and save initial projects
         // Project project1 = new Project();
