@@ -28,19 +28,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (authElements.length == 2
                     && "Bearer".equals(authElements[0])) {
-//                try {
-//                    SecurityContextHolder.getContext().setAuthentication(
-//                            userAuthenticationProvider.validateToken(authElements[1]));
-//                } catch (RuntimeException e) {
-//                    SecurityContextHolder.clearContext();
-//                    throw e;
-//                }
                 try {
-                    String refreshedToken = userAuthenticationProvider.refreshExpiredToken(authElements[1]);
                     SecurityContextHolder.getContext().setAuthentication(
-                            userAuthenticationProvider.validateToken(refreshedToken));
-                    // Add the refreshed token to the response headers
-                    httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + refreshedToken);
+                            userAuthenticationProvider.validateToken(authElements[1]));
                 } catch (RuntimeException e) {
                     SecurityContextHolder.clearContext();
                     throw e;

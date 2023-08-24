@@ -17,6 +17,8 @@ public class UserDto {
     private String login; // Email
     private String token;
     private Role role;
+    private String accessToken;
+    private String refreshToken;
 
     // Additional fields can be added as needed
 }
