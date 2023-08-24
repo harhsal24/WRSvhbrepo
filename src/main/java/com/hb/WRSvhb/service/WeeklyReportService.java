@@ -1,6 +1,8 @@
 package com.hb.WRSvhb.service;
 
+import com.hb.WRSvhb.dtos.WeeklyReportRequestForUpdateByRole;
 import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
+import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.Employee;
 import com.hb.WRSvhb.model.Project;
 import com.hb.WRSvhb.model.WeeklyReport;
@@ -88,27 +90,60 @@ public class WeeklyReportService {
         return convertToResponseDTO(report);
     }
 
-    public Optional<WeeklyReportRequestResponseDTO> updateReport(Long reportId, WeeklyReportRequestResponseDTO updatedReportDTO) {
+//    public Optional<WeeklyReportRequestResponseDTO> updateReport(Long reportId, WeeklyReportRequestResponseDTO updatedReportDTO,Long employeeId ) {
+//        Optional<WeeklyReport> existingReport = weeklyReportRepository.findById(reportId);
+//
+//           Optional<Employee> employee =employeeRepository.findByEmpId(employeeId);
+//
+//           if (employee.isPresent())
+//             {
+//            Employee emp = employee.get();
+//
+//        if (existingReport.isPresent()  ) {
+//            WeeklyReport reportToUpdate = existingReport.get();
+//
+//            if ((updatedReportDTO.getReportDetailsList() != null && emp.getRole()== Role.REGULAR_EMPLOYEE)) {
+//                reportToUpdate.setReportDetailsList(updatedReportDTO.getReportDetailsList());
+//            }
+//
+//            if (emp.getRole()==Role.TEAM_LEADER) {
+//                reportToUpdate.setRemark(updatedReportDTO.getRemark());
+//                reportToUpdate.setPointsForDiscussion(updatedReportDTO.getPointsForDiscussion());
+//                reportToUpdate.setExpectedActivitiesOfUpcomingWeek(updatedReportDTO.getExpectedActivitiesOfUpcomingWeek());
+//                reportToUpdate.setReportStatus(updatedReportDTO.getReportStatus());
+//            }
+//            reportToUpdate = weeklyReportRepository.save(reportToUpdate);
+//            return Optional.of(convertToResponseDTO(reportToUpdate));
+//        }
+//        }
+//        return Optional.empty(); // Report not found
+//    }
+    public Optional<WeeklyReportRequestResponseDTO> updateReport(Long reportId, WeeklyReportRequestForUpdateByRole updatedReport) {
         Optional<WeeklyReport> existingReport = weeklyReportRepository.findById(reportId);
-
-        if (existingReport.isPresent()) {
+    {
+        if (existingReport.isPresent()  ) {
             WeeklyReport reportToUpdate = existingReport.get();
 
-            if (updatedReportDTO.getReportDetailsList() != null) {
-                reportToUpdate.setReportDetailsList(updatedReportDTO.getReportDetailsList());
+            if ((updatedReport.getReportDetailsList() != null && updatedReport.getRole()== Role.REGULAR_EMPLOYEE)) {
+                reportToUpdate.setReportDetailsList(updatedReport.getReportDetailsList());
             }
 
-            reportToUpdate.setRemark(updatedReportDTO.getRemark());
-            reportToUpdate.setPointsForDiscussion(updatedReportDTO.getPointsForDiscussion());
-            reportToUpdate.setExpectedActivitiesOfUpcomingWeek(updatedReportDTO.getExpectedActivitiesOfUpcomingWeek());
-            reportToUpdate.setReportStatus(updatedReportDTO.getReportStatus());
+            if (updatedReport.getRole()==Role.TEAM_LEADER) {
+                reportToUpdate.setRemark(updatedReport.getRemark());
+                reportToUpdate.setPointsForDiscussion(updatedReport.getPointsForDiscussion());
+                reportToUpdate.setExpectedActivitiesOfUpcomingWeek(updatedReport.getExpectedActivitiesOfUpcomingWeek());
+                reportToUpdate.setReportStatus(updatedReport.getReportStatus());
+            }
 
             reportToUpdate = weeklyReportRepository.save(reportToUpdate);
             return Optional.of(convertToResponseDTO(reportToUpdate));
         }
+        }
 
         return Optional.empty(); // Report not found
     }
+
+
 
     public boolean deleteReport(Long reportId) {
         Optional<WeeklyReport> reportToDelete = weeklyReportRepository.findById(reportId);
@@ -224,5 +259,6 @@ public class WeeklyReportService {
             }
             return project;
         }
+
 
     }

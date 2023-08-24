@@ -1,6 +1,8 @@
 package com.hb.WRSvhb.controller;
 
+import com.hb.WRSvhb.dtos.WeeklyReportRequestForUpdateByRole;
 import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
+import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.WeeklyReport;
 import com.hb.WRSvhb.service.WeeklyReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,9 +81,9 @@ public class WeeklyReportController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReportDTO);
     }
 
-    @PutMapping("/{reportId}")
+    @PutMapping("/{reportId}/employee/{employeeId}")
     public ResponseEntity<WeeklyReportRequestResponseDTO> updateReport(
-            @PathVariable Long reportId, @RequestBody WeeklyReportRequestResponseDTO updatedReportDTO) {
+            @PathVariable Long reportId, @RequestBody WeeklyReportRequestForUpdateByRole updatedReportDTO ) {
         Optional<WeeklyReportRequestResponseDTO> result = weeklyReportService.updateReport(reportId, updatedReportDTO);
         return result.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }

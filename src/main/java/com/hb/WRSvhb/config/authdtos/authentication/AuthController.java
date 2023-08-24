@@ -9,6 +9,7 @@ import com.hb.WRSvhb.config.authdtos.security.UserAuthenticationProvider;
 
 
 import com.hb.WRSvhb.config.authdtos.user.UserService;
+import com.hb.WRSvhb.repository.EmployeeRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,7 +41,7 @@ public class AuthController {
             UserDto userDto = userService.login(credentialsDto);
             logger.info("Authentication successful for user: {}", userDto.getLogin());
 
-            userDto.setToken(userAuthenticationProvider.createToken(userDto.getLogin()));
+            userDto.setToken(userAuthenticationProvider.createToken(userDto.getLogin(),List.of(userDto.getRole())));
             logger.info("JWT token created for user: {}", userDto.getLogin());
 
             return ResponseEntity.ok(userDto);
@@ -52,7 +54,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid SignUpDto user) {
         UserDto createdUser = userService.register(user);
-        createdUser.setToken(userAuthenticationProvider.createToken(user.getLogin()));
+        createdUser.setToken(userAuthenticationProvider.createToken(user.getLogin(), List.of(user.getRole())));
         return ResponseEntity.created(URI.create("/users/" + createdUser.getEmpId())).body(createdUser);
     }
 

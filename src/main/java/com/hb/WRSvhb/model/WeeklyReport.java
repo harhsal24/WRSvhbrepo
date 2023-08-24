@@ -21,7 +21,7 @@ public class WeeklyReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-   
+
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;

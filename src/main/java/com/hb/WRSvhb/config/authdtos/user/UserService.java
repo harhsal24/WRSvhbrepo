@@ -30,7 +30,6 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
 
-
     public UserDto login(CredentialsDto credentialsDto) {
         log.info("Attempting login with username: {}", credentialsDto.getLogin());
         Employee employee = employeeRepository.findByEmail(credentialsDto.getLogin())
@@ -83,7 +82,7 @@ public class UserService {
         userDto.setEmpId(employee.getEmpId());
         userDto.setName(employee.getName());
         userDto.setLogin(employee.getEmail());
-        // Set other properties as needed
+        userDto.setRole(employee.getRole());
         return userDto;
     }
 
