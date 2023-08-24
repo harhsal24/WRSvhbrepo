@@ -54,6 +54,8 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<WeeklyReport> weeklyReports = new ArrayList<>();
 
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
 
 
 

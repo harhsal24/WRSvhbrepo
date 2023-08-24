@@ -67,6 +67,7 @@ public class SecurityConfig {
                     .addFilterBefore(new JwtAuthFilter(userAuthenticationProvider), BasicAuthenticationFilter.class)
                     .authorizeHttpRequests(auth -> {
                         auth.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                        auth.requestMatchers(HttpMethod.POST, "refresh-token").permitAll();
                         auth.requestMatchers(HttpMethod.POST, "/register").permitAll();
                         auth.requestMatchers("/error").permitAll();
                         auth.requestMatchers(HttpMethod.GET,"/employees/allEmployees").hasAuthority("SUPER_ADMIN");
