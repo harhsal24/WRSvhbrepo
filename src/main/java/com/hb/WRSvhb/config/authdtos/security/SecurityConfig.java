@@ -68,11 +68,12 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> {
                         auth.requestMatchers(HttpMethod.POST, "/login").permitAll();
                         auth.requestMatchers(HttpMethod.POST, "refresh-token").permitAll();
-                        auth.requestMatchers(HttpMethod.POST, "/register").permitAll();
+                        auth.requestMatchers( "/register").permitAll();
                         auth.requestMatchers("/error").permitAll();
-                        auth.requestMatchers(HttpMethod.GET,"/employees/allEmployees").hasAuthority("SUPER_ADMIN");
+                        auth.requestMatchers(HttpMethod.GET,"/employees/allEmployees").permitAll();
                         auth.requestMatchers("/favicon.ico").permitAll();
-                        auth.anyRequest().authenticated();
+                        auth.anyRequest().permitAll();
+//                        auth.anyRequest().authenticated();
                     })
 
                     .build();
