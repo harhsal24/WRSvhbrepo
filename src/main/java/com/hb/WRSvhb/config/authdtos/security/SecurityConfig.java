@@ -70,7 +70,7 @@ public class SecurityConfig {
                         auth.requestMatchers(HttpMethod.POST, "refresh-token").permitAll();
                         auth.requestMatchers( "/register").permitAll();
                         auth.requestMatchers("/error").permitAll();
-                        auth.requestMatchers(HttpMethod.GET,"/employees/allEmployees").permitAll();
+                        auth.requestMatchers("/employees/allEmployees").permitAll();
                         auth.requestMatchers("/favicon.ico").permitAll();
                         auth.anyRequest().permitAll();
 //                        auth.anyRequest().authenticated();
