@@ -3,23 +3,25 @@ package com.hb.WRSvhb.config.authdtos.authentication;
 
 import com.hb.WRSvhb.config.authdtos.*;
 import com.hb.WRSvhb.config.authdtos.exceptions.AppException;
+import com.hb.WRSvhb.config.authdtos.security.EmailConfig;
 import com.hb.WRSvhb.config.authdtos.security.UserAuthenticationProvider;
 
 
 import com.hb.WRSvhb.config.authdtos.user.UserService;
 import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.repository.EmployeeRepository;
+import com.hb.WRSvhb.utils.EmailUtil;
+import com.hb.WRSvhb.utils.OtpUtil;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collections;
@@ -31,6 +33,8 @@ public class AuthController {
 
     private final UserService userService;
     private final UserAuthenticationProvider userAuthenticationProvider;
+    private  final OtpUtil otpUtil;
+    private final EmailUtil emailUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -39,9 +43,15 @@ public class AuthController {
     public ResponseEntity<UserDto> login(@RequestBody @Validated CredentialsDto credentialsDto) {
         logger.info("Received credentials: Username={}, Password={}", credentialsDto.getLogin(), credentialsDto.getPassword());
 
+
+
         try {
             UserDto userDto = userService.login(credentialsDto);
-            logger.info("Authentication successful for user: {}", userDto.getLogin());
+
+            if (!userDto.isActive()) {
+                logger.info("is account active {}",userDto.isActive());
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
 
             List<Role> roles = Collections.singletonList(userDto.getRole());
 
@@ -59,15 +69,23 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid SignUpDto user) {
+
         UserDto createdUser = userService.register(user);
 
-        List<Role> roles = Collections.singletonList(user.getRole());
 
-        createdUser.setAccessToken(userAuthenticationProvider.createToken(user.getLogin(), roles));
-        createdUser.setRefreshToken(userAuthenticationProvider.createRefreshToken(user.getLogin(), roles));
+        if (createdUser != null) {
+            List<Role> roles = Collections.singletonList(user.getRole());
 
-        return ResponseEntity.created(URI.create("/users/" + createdUser.getEmpId())).body(createdUser);
-    }
+            createdUser.setAccessToken(userAuthenticationProvider.createToken(user.getLogin(), roles));
+            createdUser.setRefreshToken(userAuthenticationProvider.createRefreshToken(user.getLogin(), roles));
+
+            return ResponseEntity.created(URI.create("/users/" + createdUser.getEmpId())).body(createdUser);
+        }
+        else {
+            // Handle the case where user registration failed
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AccessTokenResponse> refreshAccessToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
@@ -88,6 +106,15 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/verify-account")
+    public ResponseEntity<String> verifyAccount(@RequestParam String email,
+                                                @RequestParam String otp) {
+        return new ResponseEntity<>(userService.verifyAccount(email, otp), HttpStatus.OK);
+    }
+    @PutMapping("/regenerate-otp")
+    public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
+        return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
+    }
 
 
 

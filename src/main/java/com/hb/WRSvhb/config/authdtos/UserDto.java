@@ -19,6 +19,7 @@ public class UserDto {
     private Role role;
     private String accessToken;
     private String refreshToken;
+    private boolean active;
 
     // Additional fields can be added as needed
 }
