@@ -1,6 +1,5 @@
 package com.hb.WRSvhb.utils;
 
-
 import java.util.Random;
 import org.springframework.stereotype.Component;
 
