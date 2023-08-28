@@ -110,6 +110,16 @@ public class AuthController {
         return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
     }
 
+    @PutMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email){
+        return new ResponseEntity<>(userService.forgotPassword(email),HttpStatus.OK);
+    }
 
+
+    @PutMapping("/set-password")
+    public ResponseEntity<String> setPassword(@RequestParam String email,@RequestHeader String newPassword)
+    {
+         return new ResponseEntity<>(userService.setPassword(email,newPassword),HttpStatus.OK);
+    }
 
 }

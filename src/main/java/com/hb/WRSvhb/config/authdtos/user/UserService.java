@@ -134,4 +134,27 @@ public class UserService {
         return "Email sent... please verify account within 1 minute";
     }
 
+    public String forgotPassword(String email) {
+        log.info("Attempting forgotPassword with username: {}", email);
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+
+        try {
+            emailUtil.sendSetPasswordEmail(email);
+        } catch (MessagingException e) {
+            throw new RuntimeException("unable to sent set password email please try again");
+        }
+        return "please check your email to set password to your account";
+    }
+
+    public String setPassword(String email, String newPassword) {
+        log.info("Attempting setPassword with username: {}", email);
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+
+        employee.setPassword(passwordEncoder.encode(newPassword));
+        employeeRepository.save(employee);
+
+        return "new password set successfully login in with new password";
+    }
 }
