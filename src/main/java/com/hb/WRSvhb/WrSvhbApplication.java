@@ -1,18 +1,12 @@
 package com.hb.WRSvhb;
 
 
-
-import jdk.javadoc.doclet.Doclet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.hb.WRSvhb.enums.Gender;
-
-import com.hb.WRSvhb.enums.Role;
-import com.hb.WRSvhb.model.Employee;
 
 import com.hb.WRSvhb.service.EmployeeService;
 import com.hb.WRSvhb.service.ProjectService;

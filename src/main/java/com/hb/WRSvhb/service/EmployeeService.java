@@ -2,14 +2,19 @@ package com.hb.WRSvhb.service;
 
 import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.EmployeeResponseDTO;
+import com.hb.WRSvhb.dtos.ProjectDTO;
+import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
 import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.Employee;
+import com.hb.WRSvhb.model.Project;
+import com.hb.WRSvhb.model.WeeklyReport;
 import com.hb.WRSvhb.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -68,9 +73,64 @@ public class EmployeeService {
         responseDTO.setEmpId(employee.getEmpId());
         responseDTO.setName(employee.getName());
         responseDTO.setRole(employee.getRole());
-        // Set other fields as needed
+        responseDTO.setGender(employee.getGender());
+        responseDTO.setEmail(employee.getEmail());
+
+        if (employee.getManager() != null) {
+            responseDTO.setManager(convertToDTO(employee.getManager()));
+        }
+
+        // Convert projects
+        List<ProjectDTO> projectDTOs = convertToProjectDTOList(employee.getProjects());
+        responseDTO.setProjects(projectDTOs);
+
+        // Convert led projects
+        List<ProjectDTO> ledProjectDTOs = convertToProjectDTOList(employee.getLedProjects());
+        responseDTO.setLedProjects(ledProjectDTOs);
+
+        // Convert weekly reports
+        List<WeeklyReportRequestResponseDTO> reportResponseDTOs = convertToWeeklyReportDTOList(employee.getWeeklyReports());
+        responseDTO.setWeeklyReports(reportResponseDTOs);
+
         return responseDTO;
     }
+    private List<ProjectDTO> convertToProjectDTOList(List<Project> projects) {
+        return projects.stream()
+                .map(this::convertToProjectDTO)
+                .collect(Collectors.toList());
+    }
+
+    private List<WeeklyReportRequestResponseDTO> convertToWeeklyReportDTOList(List<WeeklyReport> weeklyReports) {
+        return weeklyReports.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+    private ProjectDTO convertToProjectDTO(Project project) {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(project.getProjectId());
+        projectDTO.setProjectName(project.getProjectName());
+        if(project.getTeamLeader()!=null)
+        {
+            EmployeeDTO teamLeaderDTO = convertToDTO(project.getTeamLeader());
+            projectDTO.setTeamLeader(teamLeaderDTO);
+        }
+        // Set other fields as needed
+        return projectDTO;
+    }
+    private WeeklyReportRequestResponseDTO convertToResponseDTO (WeeklyReport report){
+        WeeklyReportRequestResponseDTO reportResponseDTO = new WeeklyReportRequestResponseDTO();
+        reportResponseDTO.setEmployee(convertToDTO(report.getEmployee()));
+        reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
+        reportResponseDTO.setReportId(report.getReportId());
+        reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
+        reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
+        reportResponseDTO.setRemark(report.getRemark());
+        reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
+        reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
+        reportResponseDTO.setReportStatus(report.getReportStatus());
+        return reportResponseDTO;
+    }
+
     private Employee convertToEntity(EmployeeDTO dto) {
         Employee employee = new Employee();
         employee.setEmpId(dto.getEmployeeId());

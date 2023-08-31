@@ -1,5 +1,6 @@
 package com.hb.WRSvhb.service;
 
+import com.hb.WRSvhb.config.authdtos.user.UserService;
 import com.hb.WRSvhb.dtos.WeeklyReportRequestForUpdateByRole;
 import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
 import com.hb.WRSvhb.enums.Role;
@@ -10,6 +11,8 @@ import com.hb.WRSvhb.repository.EmployeeRepository;
 import com.hb.WRSvhb.repository.WeeklyReportRepository;
 import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.ProjectDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class WeeklyReportService {
 
+    private static final Logger log = LoggerFactory.getLogger(WeeklyReportService.class);
     private final WeeklyReportRepository weeklyReportRepository;
     private final EmployeeRepository employeeRepository;
 
@@ -121,10 +125,12 @@ public class WeeklyReportService {
     public Optional<WeeklyReportRequestResponseDTO> updateReport(Long reportId, WeeklyReportRequestForUpdateByRole updatedReport) {
         Optional<WeeklyReport> existingReport = weeklyReportRepository.findById(reportId);
     {
+            log.info("update report incoming  {}" ,updatedReport);
         if (existingReport.isPresent()  ) {
             WeeklyReport reportToUpdate = existingReport.get();
+            if ((updatedReport.getReportDetailsList() != null && updatedReport.getRole() == Role.REGULAR_EMPLOYEE)) {
+                log.info("inside if {}" ,updatedReport);
 
-            if ((updatedReport.getReportDetailsList() != null && updatedReport.getRole()== Role.REGULAR_EMPLOYEE)) {
                 reportToUpdate.setReportDetailsList(updatedReport.getReportDetailsList());
             }
 
