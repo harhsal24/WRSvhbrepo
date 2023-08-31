@@ -72,8 +72,8 @@ public class SecurityConfig {
                         auth.requestMatchers("/error").permitAll();
                         auth.requestMatchers("/employees/allEmployees").permitAll();
                         auth.requestMatchers("/favicon.ico").permitAll();
-                        auth.anyRequest().permitAll();
-//                        auth.anyRequest().authenticated();
+//                        auth.anyRequest().permitAll();
+                        auth.anyRequest().authenticated();
                     })
 
                     .build();

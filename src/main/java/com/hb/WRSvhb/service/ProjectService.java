@@ -136,23 +136,36 @@ public class ProjectService {
         // Set other fields
         return projectDTO;
     }
-
+//updated
     private ProjectResponseDTO convertToResponseDTO(Project project) {
         ProjectResponseDTO responseDTO = new ProjectResponseDTO();
-        responseDTO.setTeamLeader(convertToEmployeeDTO(project.getTeamLeader()));
-        responseDTO.setEmployees(project.getEmployees().stream()
-                .map(this::convertToEmployeeDTO)
-                .collect(Collectors.toList()));
-        responseDTO.setWeeklyReports(project.getWeeklyReports().stream()
-                .map(this::convertToWeeklyReportRequestResponseDTO)
-                .collect(Collectors.toList()));
+
+        if (project.getTeamLeader() != null) {
+            responseDTO.setTeamLeader(convertToEmployeeDTO(project.getTeamLeader()));
+        }
+
+        if (project.getEmployees() != null) {
+            responseDTO.setEmployees(project.getEmployees().stream()
+                    .map(this::convertToEmployeeDTO)
+                    .collect(Collectors.toList()));
+        }
+
+        if (project.getWeeklyReports() != null) {
+            responseDTO.setWeeklyReports(project.getWeeklyReports().stream()
+                    .map(this::convertToWeeklyReportRequestResponseDTO)
+                    .collect(Collectors.toList()));
+        }
+
         responseDTO.setProjectId(project.getProjectId());
         responseDTO.setProjectName(project.getProjectName());
         responseDTO.setStartDate(project.getStartDate());
         responseDTO.setExpectedEndDate(project.getExpectedEndDate());
+
         // Set other fields
+
         return responseDTO;
     }
+
 
     private EmployeeDTO convertToEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
@@ -168,11 +181,14 @@ public class ProjectService {
         reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
         reportResponseDTO.setReportId(report.getReportId());
         reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
-        reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
+
         reportResponseDTO.setRemark(report.getRemark());
         reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
         reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
         reportResponseDTO.setReportStatus(report.getReportStatus());
+
+        reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
+
         return reportResponseDTO;
     }
 

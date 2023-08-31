@@ -13,4 +13,5 @@ import java.util.List;
 public class WeeklyReportRequestForUpdateByRole extends WeeklyReportRequestResponseDTO {
 
     private Role role;
+
 }

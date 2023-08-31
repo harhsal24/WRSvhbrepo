@@ -109,7 +109,6 @@ public class UserAuthenticationProvider {
             RefreshToken newRefreshToken = new RefreshToken();
             newRefreshToken.setToken(refreshToken);
             newRefreshToken.setExpirationDate(LocalDateTime.ofInstant(validity.toInstant(), ZoneId.systemDefault()));
-            // Associate the refresh token with the employee
             newRefreshToken.setEmployee(employee);
 
             if (employee.getRefreshToken()!=null) {
