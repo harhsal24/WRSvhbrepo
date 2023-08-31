@@ -81,13 +81,14 @@ public class AuthController {
         }
         }
 
+
     @PostMapping("/refresh-token")
     public ResponseEntity<AccessTokenResponse> refreshAccessToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         String expiredAccessToken = refreshTokenRequest.getAccessToken();
-        logger.info("{} expired token "+ expiredAccessToken);
+        logger.info("{} incoming expired token "+ expiredAccessToken);
 
         String refreshToken = refreshTokenRequest.getRefreshToken();
-        logger.info("{} refresh token "+ refreshToken);
+        logger.info("{} incoming refresh token "+ refreshToken);
 
         String newAccessToken = userAuthenticationProvider.refreshAccessToken(expiredAccessToken, refreshToken);
 

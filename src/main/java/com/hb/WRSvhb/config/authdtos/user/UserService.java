@@ -104,6 +104,7 @@ public class UserService {
         userDto.setLogin(employee.getEmail());
         userDto.setRole(employee.getRole());
         userDto.setActive(employee.isActive());
+
         return userDto;
     }
 
