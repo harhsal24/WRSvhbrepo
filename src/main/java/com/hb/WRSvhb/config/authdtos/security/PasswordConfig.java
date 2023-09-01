@@ -13,7 +13,6 @@ public class PasswordConfig {
     public PasswordEncoder passwordEncoder() {
 
 //        return new BCryptPasswordEncoder()
-        return NoOpPasswordEncoder.getInstance()
-                ;
+        return NoOpPasswordEncoder.getInstance();
     }
 }
