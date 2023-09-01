@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +57,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private RefreshToken refreshToken;
 
-    private boolean active;
 
-    private String otp;
 
-    private LocalDateTime otpGeneratedTime;
 
 }

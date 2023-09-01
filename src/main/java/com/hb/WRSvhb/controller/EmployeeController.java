@@ -3,7 +3,6 @@ package com.hb.WRSvhb.controller;
 
 import com.hb.WRSvhb.config.authdtos.exceptions.NotFoundException;
 import com.hb.WRSvhb.dtos.EmployeeDTO;
-import com.hb.WRSvhb.dtos.EmployeeRequestDTO;
 import com.hb.WRSvhb.dtos.EmployeeResponseDTO;
 import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.Employee;
@@ -64,13 +63,13 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeRequestDTO employee) {
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         Employee createdEmployee = employeeService.createEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     @PutMapping("/{empId}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long empId, @RequestBody EmployeeRequestDTO employee) {
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long empId, @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(empId, employee);
         if (updatedEmployee != null) {
             return ResponseEntity.ok(updatedEmployee);

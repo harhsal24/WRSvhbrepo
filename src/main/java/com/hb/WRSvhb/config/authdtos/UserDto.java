@@ -15,11 +15,10 @@ public class UserDto {
     private Long empId; // Use the appropriate identifier
     private String name; // You might need firstName and lastName fields
     private String login; // Email
-//    private String token;
+    private String token;
     private Role role;
     private String accessToken;
     private String refreshToken;
-    private boolean active;
 
     // Additional fields can be added as needed
 }
