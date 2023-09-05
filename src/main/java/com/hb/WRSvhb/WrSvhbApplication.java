@@ -38,19 +38,19 @@ public CommandLineRunner initData(
         WeeklyReportService weeklyReportService) {
     return args -> {
         // Create and save initial employees
-        Employee employee1 = new Employee();
-        employee1.setName("John Doe");
-        employee1.setRole(Role.TEAM_LEADER);
-        employee1.setEmail("john@example.com");
-        employee1.setGender(Gender.MALE);
-        employeeService.createEmployee(employee1);
-
-        Employee employee2 = new Employee();
-        employee2.setName("Jane Smith");
-        employee2.setRole(Role.TEAM_LEADER);
-        employee2.setEmail("jane@example.com");
-        employee2.setGender(Gender.FEMALE);
-        employeeService.createEmployee(employee2);
+//        Employee employee1 = new Employee();
+//        employee1.setName("John Doe");
+//        employee1.setRole(Role.TEAM_LEADER);
+//        employee1.setEmail("john@example.com");
+//        employee1.setGender(Gender.MALE);
+//        employeeService.createEmployee(employee1);
+//
+//        Employee employee2 = new Employee();
+//        employee2.setName("Jane Smith");
+//        employee2.setRole(Role.TEAM_LEADER);
+//        employee2.setEmail("jane@example.com");
+//        employee2.setGender(Gender.FEMALE);
+//        employeeService.createEmployee(employee2);
 
 
 
