@@ -13,6 +13,9 @@ import com.hb.WRSvhb.repository.ProjectRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactoryFriend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
+
+     private  static Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     private final ProjectRepository projectRepository;
     private final EmployeeRepository employeeRepository;
@@ -68,7 +73,9 @@ public class ProjectService {
 
 
     public Optional<ProjectResponseDTO> updateProject(Long projectId, ProjectRequestDTO updatedProjectDTO) {
+        log.info("Updating project with ID {}: {}", projectId, updatedProjectDTO);
         Optional<Project> existingProject = projectRepository.findById(projectId);
+
         if (existingProject.isPresent()) {
             Project projectToUpdate = existingProject.get();
             // Update fields of projectToUpdate with data from updatedProjectDTO

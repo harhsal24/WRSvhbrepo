@@ -4,6 +4,8 @@ import com.hb.WRSvhb.dtos.ProjectDTO;
 import com.hb.WRSvhb.dtos.ProjectRequestDTO;
 import com.hb.WRSvhb.dtos.ProjectResponseDTO;
 import com.hb.WRSvhb.service.ProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
+
+    private  static Logger log = LoggerFactory.getLogger(ProjectController.class);
 
     private final ProjectService projectService;
 
@@ -64,6 +68,10 @@ public class ProjectController {
 
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId, @RequestBody ProjectRequestDTO updatedProjectDTO) {
+
+        log.info("in controller with ID {}: {}", projectId, updatedProjectDTO);
+
+
         Optional<ProjectResponseDTO> savedProjectDTO = projectService.updateProject(projectId, updatedProjectDTO);
 
         return savedProjectDTO.map(dto -> ResponseEntity.ok(dto)).orElse(ResponseEntity.notFound().build());

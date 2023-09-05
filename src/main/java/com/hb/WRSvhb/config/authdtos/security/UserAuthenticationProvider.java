@@ -139,7 +139,7 @@ public class UserAuthenticationProvider {
         JWTVerifier verifier = JWT.require(algorithm)
                 .build();
 
-        log.info("executed");
+//        log.info("executed");
         DecodedJWT decoded = verifier.verify(token);
 
         String login = decoded.getSubject();
