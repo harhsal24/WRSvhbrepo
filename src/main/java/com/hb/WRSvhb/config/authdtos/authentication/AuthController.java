@@ -59,6 +59,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid SignUpDto user) {
+        logger.info("user is {}",user);
         UserDto createdUser = userService.register(user);
 
         List<Role> roles = Collections.singletonList(user.getRole());
