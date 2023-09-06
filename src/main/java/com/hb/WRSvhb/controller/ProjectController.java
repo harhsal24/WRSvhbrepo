@@ -4,11 +4,14 @@ import com.hb.WRSvhb.dtos.ProjectDTO;
 import com.hb.WRSvhb.dtos.ProjectRequestDTO;
 import com.hb.WRSvhb.dtos.ProjectResponseDTO;
 import com.hb.WRSvhb.service.ProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -20,12 +23,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/projects")
 public class ProjectController {
 
+    private  static Logger log = LoggerFactory.getLogger(ProjectController.class);
+
     private final ProjectService projectService;
 
     @Autowired
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
+
+
 
     @GetMapping
     public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
@@ -61,6 +68,10 @@ public class ProjectController {
 
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId, @RequestBody ProjectRequestDTO updatedProjectDTO) {
+
+        log.info("in controller with ID {}: {}", projectId, updatedProjectDTO);
+
+
         Optional<ProjectResponseDTO> savedProjectDTO = projectService.updateProject(projectId, updatedProjectDTO);
 
         return savedProjectDTO.map(dto -> ResponseEntity.ok(dto)).orElse(ResponseEntity.notFound().build());

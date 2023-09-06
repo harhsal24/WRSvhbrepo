@@ -4,7 +4,7 @@ import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.ProjectDTO;
 import com.hb.WRSvhb.dtos.ProjectRequestDTO;
 import com.hb.WRSvhb.dtos.ProjectResponseDTO;
-import com.hb.WRSvhb.dtos.WeeklyReportResponseDTO;
+import com.hb.WRSvhb.dtos.WeeklyReportRequestResponseDTO;
 import com.hb.WRSvhb.model.Employee;
 import com.hb.WRSvhb.model.Project;
 import com.hb.WRSvhb.model.WeeklyReport;
@@ -13,6 +13,9 @@ import com.hb.WRSvhb.repository.ProjectRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactoryFriend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
+
+     private  static Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     private final ProjectRepository projectRepository;
     private final EmployeeRepository employeeRepository;
@@ -68,7 +73,9 @@ public class ProjectService {
 
 
     public Optional<ProjectResponseDTO> updateProject(Long projectId, ProjectRequestDTO updatedProjectDTO) {
+        log.info("Updating project with ID {}: {}", projectId, updatedProjectDTO);
         Optional<Project> existingProject = projectRepository.findById(projectId);
+
         if (existingProject.isPresent()) {
             Project projectToUpdate = existingProject.get();
             // Update fields of projectToUpdate with data from updatedProjectDTO
@@ -136,23 +143,36 @@ public class ProjectService {
         // Set other fields
         return projectDTO;
     }
-
+//updated
     private ProjectResponseDTO convertToResponseDTO(Project project) {
         ProjectResponseDTO responseDTO = new ProjectResponseDTO();
-        responseDTO.setTeamLeader(convertToEmployeeDTO(project.getTeamLeader()));
-        responseDTO.setEmployees(project.getEmployees().stream()
-                .map(this::convertToEmployeeDTO)
-                .collect(Collectors.toList()));
-        responseDTO.setWeeklyReports(project.getWeeklyReports().stream()
-                .map(this::convertToWeeklyReportResponseDTO)
-                .collect(Collectors.toList()));
+
+        if (project.getTeamLeader() != null) {
+            responseDTO.setTeamLeader(convertToEmployeeDTO(project.getTeamLeader()));
+        }
+
+        if (project.getEmployees() != null) {
+            responseDTO.setEmployees(project.getEmployees().stream()
+                    .map(this::convertToEmployeeDTO)
+                    .collect(Collectors.toList()));
+        }
+
+        if (project.getWeeklyReports() != null) {
+            responseDTO.setWeeklyReports(project.getWeeklyReports().stream()
+                    .map(this::convertToWeeklyReportRequestResponseDTO)
+                    .collect(Collectors.toList()));
+        }
+
         responseDTO.setProjectId(project.getProjectId());
         responseDTO.setProjectName(project.getProjectName());
         responseDTO.setStartDate(project.getStartDate());
         responseDTO.setExpectedEndDate(project.getExpectedEndDate());
+
         // Set other fields
+
         return responseDTO;
     }
+
 
     private EmployeeDTO convertToEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
@@ -162,21 +182,20 @@ public class ProjectService {
         return employeeDTO;
     }
 
-    private WeeklyReportResponseDTO convertToWeeklyReportResponseDTO(WeeklyReport report) {
-        WeeklyReportResponseDTO reportResponseDTO = new WeeklyReportResponseDTO();
+    private WeeklyReportRequestResponseDTO convertToWeeklyReportRequestResponseDTO(WeeklyReport report) {
+        WeeklyReportRequestResponseDTO reportResponseDTO = new WeeklyReportRequestResponseDTO();
         reportResponseDTO.setEmployee(convertToEmployeeDTO(report.getEmployee()));
         reportResponseDTO.setProject(convertToProjectDTO(report.getProject()));
         reportResponseDTO.setReportId(report.getReportId());
         reportResponseDTO.setReportCreatedDateTime(report.getReportCreatedDateTime());
-        reportResponseDTO.setPlannedCompletionDate(report.getPlannedCompletionDate());
-        reportResponseDTO.setActualCompletionDate(report.getActualCompletionDate());
-        reportResponseDTO.setDeliverables(report.getDeliverables());
-        reportResponseDTO.setNoOfHours(report.getNoOfHours());
-        reportResponseDTO.setActivity(report.getActivity());
+
         reportResponseDTO.setRemark(report.getRemark());
         reportResponseDTO.setPointsForDiscussion(report.getPointsForDiscussion());
         reportResponseDTO.setExpectedActivitiesOfUpcomingWeek(report.getExpectedActivitiesOfUpcomingWeek());
         reportResponseDTO.setReportStatus(report.getReportStatus());
+
+        reportResponseDTO.setReportDetailsList(report.getReportDetailsList());
+
         return reportResponseDTO;
     }
 

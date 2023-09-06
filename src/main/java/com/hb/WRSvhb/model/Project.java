@@ -15,6 +15,19 @@ import java.util.List;
 @Entity
 public class Project {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long projectId;
+
+    @Column(nullable = false)
+    private String projectName;
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate expectedEndDate;
+
 
     @ManyToOne
     @JoinColumn(name = "team_leader_id")
@@ -33,12 +46,5 @@ public class Project {
 
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long projectId; 
 
-    private String projectName;
-
-    private LocalDate startDate;
-    private LocalDate expectedEndDate;
 }

@@ -1,11 +1,14 @@
 package com.hb.WRSvhb.controller;
 
 
+import com.hb.WRSvhb.config.authdtos.exceptions.NotFoundException;
 import com.hb.WRSvhb.dtos.EmployeeDTO;
 import com.hb.WRSvhb.dtos.EmployeeResponseDTO;
 import com.hb.WRSvhb.enums.Role;
 import com.hb.WRSvhb.model.Employee;
 import com.hb.WRSvhb.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +23,34 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     private final  EmployeeService employeeService;
+    private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
+
+    @GetMapping("/allEmployees")
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<EmployeeDTO> allEmployees = employeeService.findAllEmployees()
+                .stream()
+                .map(this::convertToEmployeeDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(allEmployees);
+    }
+
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable Long employeeId) {
-        Optional<EmployeeResponseDTO> employeeDTO = employeeService.getEmployeeById(employeeId);
-        return employeeDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        try {
+            EmployeeResponseDTO employeeDTO = employeeService.getEmployeeById(employeeId)
+                    .orElseThrow(() -> new NotFoundException("Employee not found with ID: " + employeeId));
+            return ResponseEntity.ok(employeeDTO);
+        } catch (NotFoundException ex) {
+            logger.error(ex.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/byRole/{role}")

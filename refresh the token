@@ -1,0 +1,39 @@
+// Function to refresh the token
+async function refreshAccessToken() {
+  try {
+    const response = await fetch('/refreshToken', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${oldToken}`
+      }
+    });
+
+    const data = await response.json();
+    const newToken = data.token;
+
+    // Update the token in local storage
+    localStorage.setItem('accessToken', newToken);
+
+    return newToken;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+  }
+}
+
+// Check token expiration and refresh if necessary
+function checkTokenExpiration() {
+  const token = localStorage.getItem('accessToken');
+
+  if (token) {
+    const decodedToken = decodeToken(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    // Check if the token is about to expire (e.g., within 5 minutes)
+    if (decodedToken.exp - currentTime <= 300) {
+      refreshAccessToken();
+    }
+  }
+}
+
+// Check token expiration periodically
+setInterval(checkTokenExpiration, 60000); // Check every 1 minute
